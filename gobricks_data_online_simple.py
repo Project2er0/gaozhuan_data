@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 
 # Read the ids from the id_List.csv file with utf-8 encoding
-url = 'https://raw.githubusercontent.com/Project0ne/gaozhuan_data/main/id_List.csv'
+url = 'https://raw.githubusercontent.com/Project0ne/gaozhuan_data/main/id_List.csv?token=GHSAT0AAAAAACAXPB2DXFOFOZHXWNG2OHXEZBWS4PQ'
 df = pd.read_csv(url, header=None)
 ids = df[0].tolist()
 

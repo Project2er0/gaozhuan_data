@@ -5,7 +5,7 @@ import concurrent.futures
 import ssl
 
 # Read the ids from the id_List.csv file with utf-8 encoding
-url = 'https://raw.githubusercontent.com/Project0ne/gaozhuan_data/main/id_List.csv?token=GHSAT0AAAAAAB7RS2QEX7ZK5HXR6PU2AJJYZBWWU6A'
+url = 'https://github.com/Project0ne/gaozhuan_data/blob/c6d84cd399b1d3048003c25ffbcb00fd79434488/id_List.csv'
 df = pd.read_csv(url, header=None)
 ids = df[0].tolist()
 

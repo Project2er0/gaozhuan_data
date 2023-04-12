@@ -1,11 +1,15 @@
+import urllib3
+urllib3.disable_warnings()
+
 import csv
 import pandas as pd
 import requests
 import concurrent.futures
 import ssl
+from tqdm import tqdm
 
 # Read the ids from the id_List.csv file with utf-8 encoding
-url = 'https://github.com/Project0ne/gaozhuan_data/blob/c6d84cd399b1d3048003c25ffbcb00fd79434488/id_List.csv'
+url = 'https://raw.githubusercontent.com/Project0ne/src/69fede5cdfbb038d9f80d8d70b58627cffe1e917/id_List.csv'
 df = pd.read_csv(url, header=None)
 ids = df[0].tolist()
 
@@ -16,12 +20,20 @@ def fetch_data(id):
     # URL to fetch data from
     url = f'https://gobricks.cn/frontend/v1/item/filter?product_id={id}&type=2&limit=96&offset=0'
 
-    # Send a GET request to the URL and store the response
-    response = requests.get(url, verify=False)
+    try:
+        # Send a GET request to the URL and store the response
+        response = requests.get(url, verify=False)
+    except requests.exceptions.ProxyError as e:
+        print("ProxyError occurred:", e)
+        return []
 
     # Extract only the fields that we want to write to the CSV file
     data = response.json()['rows']
     filtered_data = [{k: v for k, v in d.items() if k in fieldnames} for d in data]
+    
+    # Update the progress bar
+    pbar.update(1)
+    
     return filtered_data
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -31,7 +43,14 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
         # Only write the header if the file is empty
         if csvfile.tell() == 0:
             writer.writeheader()
+        
+        # Initialize the progress bar
+        pbar = tqdm(total=len(ids))
+        
         # Submit the requests to the executor and write the data to the CSV file
         for data in executor.map(fetch_data, ids):
             for d in data:
                 writer.writerow(d)
+        
+        # Close the progress bar
+        pbar.close()

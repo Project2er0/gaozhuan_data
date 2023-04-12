@@ -1,0 +1,30 @@
+name: Daily Data Update
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas requests csv
+
+    - name: Run script
+      run: python main.py
+
+    - name: Send data.csv to webhook
+      run: |
+        curl -X POST -H 'Content-Type: application/json' -d '{"file": "@data.csv"}' https://oapi.dingtalk.com/robot/send?access_token=abf86f19586c7129578b4ffb9ab69f5e679c20df1b3a14b7eb21e21e62947eab

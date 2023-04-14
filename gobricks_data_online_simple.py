@@ -7,6 +7,7 @@ import requests
 import concurrent.futures
 import ssl
 from tqdm import tqdm
+import time
 
 # Read the ids from the id_List.csv file with utf-8 encoding
 url = 'https://gitee.com/Project0ne/cdn/raw/master/src/id_List.csv'
@@ -15,6 +16,9 @@ ids = df[0].tolist()
 
 # Define the fieldnames for the CSV file
 fieldnames = ["id", "caption","price", "caption_en", "color_id",  "inventory" ]
+
+# Generate a filename based on the current time
+filename = "gobrick_data_" + time.strftime("%Y-%m-%d_%H-%M-%S") + ".csv"
 
 def fetch_data(id):
     # URL to fetch data from
@@ -38,7 +42,7 @@ def fetch_data(id):
 
 with concurrent.futures.ThreadPoolExecutor() as executor:
     # Open a CSV file in append mode with utf-8 encoding and write the data to it
-    with open("data.csv", "a", newline="", encoding="utf-8_sig") as csvfile:
+    with open(filename, "a", newline="", encoding="utf-8_sig") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         # Only write the header if the file is empty
         if csvfile.tell() == 0:

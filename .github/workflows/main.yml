@@ -20,7 +20,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Run script
-        run: python Project0ne/gaozhuan_data/blob/main/main.py
+        run: main.py
         
       - name: Send data.csv to webhook
         run: |

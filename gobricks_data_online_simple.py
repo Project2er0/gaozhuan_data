@@ -9,7 +9,7 @@ import ssl
 from tqdm import tqdm
 
 # Read the ids from the id_List.csv file with utf-8 encoding
-url = 'https://raw.githubusercontent.com/Project0ne/cdn-1/master/id_List.csv'
+url = 'https://gitee.com/Project0ne/cdn/raw/master/src/id_List.csv'
 df = pd.read_csv(url, header=None)
 ids = df[0].tolist()
 
